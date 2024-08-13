@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.ListView
 import android.widget.Toast
@@ -18,15 +19,22 @@ class MainActivity : AppCompatActivity(),ClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
+        val editor=sharedPreferences.edit()
         myadapter=CustomListViewAdapterNameAndAge( this, itemslistdata,this)
         val listdata:ListView=findViewById(R.id.listview)
 
         listdata.setAdapter(myadapter)
         val imgbtn=findViewById<ImageView>(R.id.imgbtn)
-
+         val logout=findViewById<ImageView>(R.id.logout)
         imgbtn.setOnClickListener{
             val intent=Intent(this,Activity_two::class.java)
             startActivity(intent)
+        }
+        logout.setOnClickListener {
+            editor.putBoolean("isdatapresent",false)
+            editor.apply()
+            startActivity(Intent(this,Loginpage::class.java))
         }
 
 
@@ -40,7 +48,6 @@ class MainActivity : AppCompatActivity(),ClickListener {
         if((itemslistdata?.size?:0)>0 && position >-1){
             itemslistdata.removeAt(position)
             myadapter?.notifyDataSetChanged()
-
         }
     }
 
